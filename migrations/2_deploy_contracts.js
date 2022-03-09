@@ -1,0 +1,22 @@
+const Tether = artifacts.require("Tether");
+const RWD = artifacts.require("RWD");
+const DecentralBank = artifacts.require("DecentralBank");
+// const Grizz = artifacts.require("Grizz");
+
+module.exports = async function(deployer, network, account) {
+  await deployer.deploy(Tether);
+  const tether = await Tether.deployed();
+
+  await deployer.deploy(RWD);
+  const rwd = await RWD.deployed();
+
+  await deployer.deploy(DecentralBank, rwd.address, tether.address);
+  const decentralBank = await DecentralBank.deployed();
+
+  await rwd.transfer(decentralBank.address, "1000000000000000000000000"); //million
+  await tether.transfer(account[1], "100000000000000000000"); //hundred
+};
+
+// module.exports = async function(deployer) {
+//   await deployer.deploy(Grizz);
+// };
